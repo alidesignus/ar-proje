@@ -2,23 +2,24 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- THREE JS -->
+
+  <!-- THREE.JS (KRİTİK) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-  
+
   <!-- MINDAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-three.prod.js"></script>
 </head>
 
 <body>
 <script>
-const start = async () => {
+(async () => {
+
   const mindarThree = new window.MINDAR.IMAGE.MindARThree({
     container: document.body,
     imageTargetSrc: './target.mind',
   });
 
-  const {renderer, scene, camera} = mindarThree;
+  const { renderer, scene, camera } = mindarThree;
 
   const video = document.createElement('video');
   video.src = 'video.webm';
@@ -27,27 +28,23 @@ const start = async () => {
   video.playsInline = true;
 
   const texture = new THREE.VideoTexture(video);
-  const geometry = new THREE.PlaneGeometry(1, 0.6);
-  const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true
-  });
 
-  const plane = new THREE.Mesh(geometry, material);
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 0.6),
+    new THREE.MeshBasicMaterial({ map: texture, transparent: true })
+  );
 
   const anchor = mindarThree.addAnchor(0);
   anchor.group.add(plane);
 
   await mindarThree.start();
-
   video.play();
 
   renderer.setAnimationLoop(() => {
     renderer.render(scene, camera);
   });
-};
 
-start();
+})();
 </script>
 </body>
 </html>
